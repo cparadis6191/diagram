@@ -568,6 +568,15 @@ local function code_to_figure (conf)
       return nil
     end
 
+    -- Classes.
+    local dgr_classes = {}
+    for i, prefix_and_class in pairs(block.classes or {}) do
+      local prefix, class = prefix_and_class:match '^(opt)%-(.+)$'
+      if prefix == 'opt' then
+        dgr_classes[class] = i
+      end
+    end
+
     -- Unified properties.
     local dgr_opt = diagram_options(block, engine.line_comment_start)
     for optname, value in pairs(engine.opt or {}) do
@@ -590,7 +599,7 @@ local function code_to_figure (conf)
       -- No cached image; call the converter
       local success
       success, imgdata, imgtype =
-        pcall(engine.compile, engine, block.text, dgr_opt.opt)
+        pcall(engine.compile, engine, block.text, dgr_opt.opt, dgr_classes)
 
       -- Bail if an error occurred; imgdata contains the error message
       -- when that happens.
