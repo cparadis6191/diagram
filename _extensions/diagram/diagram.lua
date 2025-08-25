@@ -296,7 +296,7 @@ local d2 = {
   line_comment_start = '#',
   mime_types = mime_types_set{'png', 'svg'},
 
-  compile = function (self, code, user_opts)
+  compile = function (self, code, user_opts, user_classes)
     return with_temporary_directory('diagram', function (tmpdir)
       return with_working_directory(tmpdir, function ()
         -- D2 format identifiers correspond to common file extensions.
@@ -310,6 +310,10 @@ local d2 = {
         table.insert(args, '--bundle')
         table.insert(args, '--pad=0')
         table.insert(args, '--scale=1')
+
+        for class, i in pairs(user_classes) do
+            table.insert(args, '--' .. class)
+        end
 
         table.insert(args, infile)
         table.insert(args, outfile)
